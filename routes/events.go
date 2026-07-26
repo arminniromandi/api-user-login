@@ -2,7 +2,6 @@ package routes
 
 import (
 	"go-project/models"
-	"go-project/utils"
 	"net/http"
 	"strconv"
 
@@ -41,25 +40,8 @@ func getEvent(c *gin.Context) {
 
 func saveEvent(c *gin.Context) {
 
-	token := c.Request.Header.Get("Authorization")
-
-	if token == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "not authorized!",
-		})
-		return
-	}
-
-	userId, err := utils.VerifyToken(token)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "not authorized!",
-		})
-		return
-	}
-
 	var event models.Event
-	err = c.ShouldBindJSON(&event)
+	err := c.ShouldBindJSON(&event)
 
 	if err != nil {
 
@@ -69,6 +51,7 @@ func saveEvent(c *gin.Context) {
 		return
 	}
 
+	userId := c.GetInt64("userId")
 	event.User_Id = userId
 	err = event.Save()
 
