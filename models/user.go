@@ -39,21 +39,21 @@ func (u User) Save() error {
 
 }
 
-func (u User) ValidateUserLogin() error {
+func (u *User) ValidateUserLogin() error {
 
 	query := "SELECT user_id , password FROM user WHERE email = ?"
 
 	row := database.Db.QueryRow(query, u.Email)
 
-	var reterviedPass string
+	var retrievedPass string
 
-	err := row.Scan(&u.ID, &reterviedPass)
+	err := row.Scan(&u.ID, &retrievedPass)
 
 	if err != nil {
 		return errors.New("Invalid Login")
 	}
 
-	checkpass := utils.ComparePasswordHashed(u.Password, reterviedPass)
+	checkpass := utils.ComparePasswordHashed(u.Password, retrievedPass)
 
 	if !checkpass {
 		return errors.New("Invalid Login")

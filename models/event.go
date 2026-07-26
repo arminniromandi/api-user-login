@@ -9,12 +9,12 @@ type Event struct {
 	Name        string `json:"name" binding:"required"`
 	Description string `json:"description" binding:"required"`
 	Location    string `json:"location" binding:"required"`
-	User_Id     int    `json:"user_id"`
+	User_Id     int64  `json:"user_id"`
 }
 
 var data []Event
 
-func (e Event) Save() error {
+func (e *Event) Save() error {
 	//perform to db
 	query := `INSERT INTO events (name, location, description , user_id) VALUES (?, ?, ?, ?)`
 	//Prepare is like to Exec and Query
